@@ -6,11 +6,11 @@ import { useQuery } from "react-query";
 import { Header } from "../../components/Header";
 import { Pagination } from "../../components/Pagination";
 import { Sidebar } from "../../components/Sidebar";
+import { api } from "../../services/api";
 
 export default function UsersList() {
-  const { data, isLoading, error } = useQuery("users", async () => {
-    const response = await fetch("http://localhost:3000/api/users");
-    const data = await response.json();
+  const { data, isLoading, error, isFetching } = useQuery("users", async () => {
+    const { data } = await api.get("users");
 
     const users = data.users.map(user => {
       return {
@@ -25,7 +25,7 @@ export default function UsersList() {
 
     return users;
   }, {
-    staleTime: 1000 * 5, // Fresh - 5 seconds 
+    staleTime: 1000 * 5, // Fresh - 5 seconds
   });
 
   const isWideVersion = useBreakpointValue({
@@ -47,7 +47,10 @@ export default function UsersList() {
 
         <Box flex="1" borderRadius={8} bg="gray.800" p="8">
           <Flex mb="8" justify="space-between" align="center">
-            <Heading size="lg" fontWeight="normal">Usuários</Heading>
+            <Heading size="lg" fontWeight="normal">
+              Usuários
+              { !isLoading && isFetching && <Spinner size="sm" color="gray.500" ml="4" />}
+            </Heading>
 
             <Link href="/users/create" passHref>
               <Button
