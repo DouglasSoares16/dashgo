@@ -13,7 +13,7 @@ type GetUsersReponse = {
   totalCount: number
 }
 
-export async function getUsers(page: number): Promise<> {
+export async function getUsers(page: number): Promise<GetUsersReponse> {
   const { data, headers } = await api.get("users", {
     params: {
       page
